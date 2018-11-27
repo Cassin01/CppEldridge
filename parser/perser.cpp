@@ -37,8 +37,12 @@ class Parser {
         return "space";
       } else if (this_is.is_this(str[it], '*')) {
         return "_*_";
+      } else if (this_is.is_this(str[it], '/')) {
+        return "_/_";
       } else if (this_is.is_this(str[it], '+')) {
         return "_+_";
+      } else if (this_is.is_this(str[it], '-')) {
+        return "_-_";
       } else {
         return "others";
       }
@@ -87,8 +91,8 @@ class Parser {
       it = 0;
       while (it < str.size()) {
         string detected = detect(str, it);
+        cout << detected << endl;
         if (detected == "num") {
-          cout << "num" << endl;
           snode[n].node  = detected;
           snode[n].value = str[it];
           snode[n].right = -1;
@@ -102,8 +106,7 @@ class Parser {
         } else if (detected == "space") {
           //cout << "space" << endl;
           // なにもしない。
-        } else if (detected == "_*_") {
-          cout << "_*_" << endl;
+        } else if (detected == "_*_" || detected == "_/_") {
           snode[n].node  = detected;
           snode[n].value = str[it];
           if (stack_top_type() == "num") {
@@ -112,12 +115,12 @@ class Parser {
             code_stack.pop_back();
             code_stack.push_back(n);
           }
-          else if (stack_top_type() == "_+_") {
+          else if (stack_top_type() == "_+_" || stack_top_type() == "_-_") {
             snode[n].right = snode[code_stack.back()].left;
             snode[n].left  = -1;
             snode[code_stack.back()].left = n;
           }
-          else if (stack_top_type() == "_*_") {
+          else if (stack_top_type() == "_*_" || stack_top_type() == "_/_") {
             snode[n].right = code_stack.back();
             snode[n].left  = -1;
             code_stack.pop_back();
@@ -127,8 +130,7 @@ class Parser {
             cout << "ERR : unkown operator" << endl;
           }
           n++;
-        } else if (detected == "_+_") {
-          cout << "_+_" << endl;
+        } else if (detected == "_+_" || detected == "_-_") {
           snode[n].node  = detected;
           snode[n].value = str[it];
           snode[n].right = code_stack.back();
@@ -151,7 +153,8 @@ class Parser {
 
 
 int main(void) {
+  string s;
   Parser parser;
-  parser.solve("2 + 2 * 3");
+  parser.solve("2 / 2 + 1");
   return 0;
 }
