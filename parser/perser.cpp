@@ -30,6 +30,7 @@ class Parser {
     }
 
     string detect(string str, int it) {
+      vector<int> brackets;
       ThisIs this_is;
       if (isdigit(str[it])) {
         return "num";
@@ -43,6 +44,10 @@ class Parser {
         return "_+_";
       } else if (this_is.is_this(str[it], '-')) {
         return "_-_";
+      } else if (this_is.is_this(str[it], '(')) {
+        return "_(_";
+      } else if (this_is.is_this(str[it], ')')) {
+        return "_)_";
       } else {
         return "others";
       }
@@ -138,8 +143,9 @@ class Parser {
           code_stack.pop_back();
           code_stack.push_back(n);
           n++;
-        }
-        else if (detected == "ohters") {
+        } else if (detected == "_(_") {
+        } else if (detected == "_)_") {
+        } else if (detected == "ohters") {
           cout << "変な文字入ってるよ" << endl;
           return;
         }
@@ -153,8 +159,8 @@ class Parser {
 
 
 int main(void) {
-  string s;
+  string s = "2 / 2 + 1";
   Parser parser;
-  parser.solve("2 / 2 + 1");
+  parser.solve(s);
   return 0;
 }
